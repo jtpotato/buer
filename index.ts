@@ -7,6 +7,8 @@ import {
 } from "discord.js";
 import { BuerClient } from "./types/TypeBuerClient";
 import { ocr } from "./commands/ocr";
+import * as dotenv from "dotenv";
+dotenv.config()
 
 const client: BuerClient = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
@@ -34,3 +36,5 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
     }
   }
 });
+
+client.login(process.env.BUER_TOKEN);

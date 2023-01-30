@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "refresh-commands": "ts-node deploy-commands.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@types/node": "*",
-    "discord.js": "^14.7.1"
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
   }
 }
