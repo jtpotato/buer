@@ -13,7 +13,7 @@ export const ocr: BuerCommand = {
     .setDescription(
       "Buer uses All Schemes To Know, and reads text from the most recent image that you sent."
     ),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction) {
     await interaction.deferReply();
 
     let imageURL = "Oops, probably can't find the image or something";

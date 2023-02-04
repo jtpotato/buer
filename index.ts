@@ -7,13 +7,16 @@ import {
 } from "discord.js";
 import { BuerClient } from "./types/TypeBuerClient";
 import { ocr } from "./commands/ocr";
+import { summarise } from "./commands/summarise";
 import * as dotenv from "dotenv";
-dotenv.config()
+import Tesseract from "tesseract.js";
+dotenv.config();
 
-const client: BuerClient = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client: BuerClient = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
 client.commands = new Collection();
 
 client.commands.set("ocr", ocr);
+client.commands.set("summarise", summarise);
 
 client.on(Events.InteractionCreate, async (interaction: any) => {
   const commandInteraction: CommandInteraction = interaction;
@@ -34,6 +37,15 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
         ephemeral: true,
       });
     }
+  }
+});
+
+client.on(Events.MessageCreate, async (message) => {
+  if (message.attachments.first()) {
+    let response = await message.reply("Trying to read image...")
+    let imageURL = message.attachments.first()?.url!;
+    let imageContents = await Tesseract.recognize(imageURL, "eng");
+    await response.edit(imageContents.data.text);
   }
 });
 

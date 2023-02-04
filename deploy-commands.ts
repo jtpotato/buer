@@ -1,5 +1,6 @@
 import { REST, Routes } from 'discord.js';
 import { ocr } from './commands/ocr';
+import { summarise } from './commands/summarise';
 
 import * as dotenv from "dotenv";
 dotenv.config()
@@ -7,6 +8,7 @@ dotenv.config()
 let commands: any[] = []
 
 commands.push(ocr.data.toJSON()) // what type is this??
+commands.push(summarise.data.toJSON())
 
 // Construct and prepare an instance of the REST module
 const rest = new REST({ version: '10' }).setToken(process.env.BUER_TOKEN!);

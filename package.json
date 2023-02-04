@@ -18,6 +18,8 @@
     "@types/node": "*",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.3",
+    "eslint": ">= 4.12.1",
+    "node-summarizer": "^1.0.7",
     "tesseract.js": "^4.0.2"
   }
 }
