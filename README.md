@@ -3,7 +3,9 @@
 
 Named after the God of Wisdom in Genshin Impact.
 
-A text summary and OCR utility Discord bot designed for internal use.
+A text summary and OCR utility Discord bot - internal tool, not documented very well.
+
+Uses tesseract.js for OCR, summary still in development. May use GPT-2 in future. May be completely eclipsed by Discord's in-house summary features.
 
 # Instructions for self-host
 - Clone this repository (`--depth=1`)
