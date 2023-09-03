@@ -3,14 +3,15 @@
  */
 
 import { Router } from "itty-router";
-import {
-  InteractionResponseType,
-  InteractionType,
-} from "discord-interactions";
+import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { SUMMARISE_COMMAND } from "./commands.js";
 import verifyDiscordRequest from "./discord/verifyDiscordRequest.js";
 import FilterMessages from "./summarise/filter.js";
-import { APIUserApplicationCommandInteraction, APIMessage } from "discord-api-types/v10";
+import {
+  APIUserApplicationCommandInteraction,
+  APIMessage,
+} from "discord-api-types/v10";
+import { summarise } from "./summarise/summary.js";
 
 class JsonResponse extends Response {
   constructor(body: object, init: object | undefined = undefined) {
@@ -53,7 +54,8 @@ router.post("/", async (request, env, ctx) => {
   }
 
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
-    const commandInteraction = interaction as APIUserApplicationCommandInteraction;
+    const commandInteraction =
+      interaction as APIUserApplicationCommandInteraction;
     // Most user commands will come as `APPLICATION_COMMAND`.
     switch (commandInteraction.data.name.toLowerCase()) {
       case SUMMARISE_COMMAND.name.toLowerCase(): {
@@ -72,10 +74,40 @@ router.post("/", async (request, env, ctx) => {
 
             const messages: APIMessage[] = await response.json();
 
-            const filteredMessages = FilterMessages(messages, commandInteraction);
+            const filteredMessages = FilterMessages(
+              messages,
+              commandInteraction
+            )
+              .reverse()
+              .join("\n");
 
-            const text = filteredMessages.join("\n");
-            console.log(text);
+            // Send the messages to the summarisation API.
+            const summary = await summarise(filteredMessages, env);
+            
+            console.log("[Buer] Sending summary back to Discord.")
+            // Send the summarised message back to Discord.
+            const summaryMessage = await fetch(`https://discord.com/api/v10/channels/${channel}/messages`, {
+              headers: {
+                Authorization: `Bot ${env.DISCORD_TOKEN}`,
+                "Content-Type": "application/json",
+              },
+              method: "POST",
+              body: JSON.stringify({
+                content: summary,
+                allowed_mentions: {
+                  parse: [],
+                },
+              }),
+            });
+
+            if (summaryMessage.status != 200) {
+              console.error("[Buer] Failed to send summary to Discord:")
+              console.error((await summaryMessage.json()).errors)
+              resolve(false);
+              return;
+            }
+
+            console.log("[Buer] " + await summaryMessage.json())
 
             resolve(true);
           })
@@ -84,8 +116,8 @@ router.post("/", async (request, env, ctx) => {
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content:
-              "We saw your message! We're still building this though...\nWe'd also send some cool art but nobody here's an artist.",
+            content: "```Summarising messages... (This could take a while.)```",
+            ephermeral: true,
           },
         });
       }

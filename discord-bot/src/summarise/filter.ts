@@ -35,7 +35,7 @@ function FilterMessages(
       return "";
     }
 
-    return message.author.username + ": " + messageContent;
+    return message.author.global_name + ": " + messageContent;
   });
 
   // Remove empty messages
