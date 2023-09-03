@@ -18,9 +18,10 @@ export async function summarise(text, env) {
   const data = {
     inputs: text,
     parameters: {
-      repetition_penalty: 2.0,
+      repetition_penalty: 90,
     }
   };
   const result = await query(data, env);
+  console.log(result)
   return result[0].generated_text;
 }
