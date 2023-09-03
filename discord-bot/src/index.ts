@@ -74,7 +74,7 @@ router.post("/", async (request, env, ctx) => {
 
             const filteredMessages = FilterMessages(messages, commandInteraction);
 
-            const text = messages.map((message) => message.content).join("\n");
+            const text = filteredMessages.join("\n");
             console.log(text);
 
             resolve(true);
