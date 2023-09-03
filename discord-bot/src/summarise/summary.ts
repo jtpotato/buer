@@ -16,7 +16,10 @@ async function query(data, env) {
 
 export async function summarise(text, env) {
   const data = {
-    inputs: text
+    inputs: text,
+    parameters: {
+      repetition_penalty: 2.0,
+    }
   };
   const result = await query(data, env);
   return result[0].generated_text;
