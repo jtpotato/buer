@@ -1,4 +1,5 @@
-# Buer
+![](https://project-cards.jtpotatodev.workers.dev/?project=buer&started=30%20Jan%202023&codename=buer)
+
 A text-summarisation bot using Google's Pegasus model (similar to functionality in Google Chat)
 
 <img src="./logo.jpeg" width=64 alt="Buer's Logo">
